@@ -1,0 +1,40 @@
+CREATE TABLE san_pham (
+        id INT IDENTITY(1,1) PRIMARY KEY,
+        ma_san_pham VARCHAR(255) ,
+        ten_san_pham VARCHAR(255) ,
+        trang_thai VARCHAR(50), -- or INT, depending on how you represent status
+        ngay_tao DATETIME ,
+        ngay_sua DATETIME
+        );
+
+         CREATE TABLE danh_muc (
+                id INT IDENTITY(1,1) PRIMARY KEY,
+                ma_danh_muc VARCHAR(255),
+                ten_danh_muc VARCHAR(255),
+                trang_thai VARCHAR(50), -- Adjust based on how you plan to represent the status
+                ngay_tao DATETIME,
+                ngay_sua DATETIME
+                );
+
+ALTER TABLE san_pham
+                        ADD mo_ta Text NULL;
+                 ALTER TABLE san_pham
+                        ADD id_danh_muc INT NULL;
+
+                        ALTER TABLE san_pham
+                        ADD CONSTRAINT fk_san_pham_danh_muc
+                        FOREIGN KEY (id_danh_muc) REFERENCES danh_muc(id) ON UPDATE CASCADE ON DELETE CASCADE;
+  INSERT INTO danh_muc (ma_danh_muc, ten_danh_muc, trang_thai, ngay_tao, ngay_sua) VALUES
+        ('DM001', 'Điện thoại', 'Hoạt động', GETDATE(), GETDATE()),
+        ('DM002', 'Laptop', 'Hoạt động', GETDATE(), GETDATE()),
+        ('DM003', 'Tablet', 'Hoạt động', GETDATE(), GETDATE()),
+        ('DM004', 'Phụ kiện', 'Hoạt động', GETDATE(), GETDATE()),
+        ('DM005', 'Smartwatch', 'Hoạt động', GETDATE(), GETDATE());
+
+
+INSERT INTO san_pham (ma_san_pham, ten_san_pham, trang_thai, ngay_tao, ngay_sua, id_danh_muc, mo_ta) VALUES
+('SP001', 'iPhone 15 Pro', 'Hoạt động', GETDATE(), GETDATE(), 1,'Lorem Ipsum is simply dummy text of the printing and typesetting industry.'),
+('SP002', 'MacBook Pro 16"', 'Hoạt động', GETDATE(), GETDATE(), 2,'Lorem Ipsum is simply dummy text of the printing and typesetting industry.'),
+('SP003', 'iPad Air M2', 'Hoạt động', GETDATE(), GETDATE(), 3,'Lorem Ipsum is simply dummy text of the printing and typesetting industry.'),
+('SP004', 'AirPods Pro 2', 'Hoạt động', GETDATE(), GETDATE(), 4,'Lorem Ipsum is simply dummy text of the printing and typesetting industry'),
+('SP005', 'Apple Watch Ultra', 'Hoạt động', GETDATE(), GETDATE(), 5,'Lorem Ipsum is simply dummy text of the printing and typesetting industry.');
