@@ -1,6 +1,8 @@
 package com.example.sp25tutorsof203.repository;
 
 import com.example.sp25tutorsof203.model.DanhMuc;
+import com.example.sp25tutorsof203.model.SanPham;
+import com.example.sp25tutorsof203.model.SanPhamDto;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -59,5 +61,76 @@ public class DanhMucRepo {
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    public List<SanPhamDto> getListSpDto() {
+        String sql = "\n" +
+                "select sp.id, " +
+                "sp.ten_san_pham, " +
+                "sp.ma_san_pham, " +
+                "sp.mo_ta, " +
+                "d.ten_danh_muc, " +
+                "sp.trang_thai " +
+                "from san_pham sp inner join danh_muc d " +
+                "on sp.id_danh_muc = d.id\n";
+
+        List<SanPhamDto> list = new ArrayList<>();
+        try (Connection conn = DbConnection.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql);) {
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                SanPhamDto sanPhamDto = new SanPhamDto();
+                sanPhamDto.setId(rs.getInt("id"));
+                sanPhamDto.setTenSanPham(rs.getString("ten_san_pham"));
+                sanPhamDto.setMaSanPham(rs.getString("ma_san_pham"));
+                sanPhamDto.setMoTa(rs.getString("mo_ta"));
+                sanPhamDto.setTenDanhMuc(rs.getString("ten_danh_muc"));
+                sanPhamDto.setTrangThai(rs.getString("trang_thai"));
+                list.add(sanPhamDto);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return list;
+    }
+
+    public void add(SanPham sanPham) {
+        String sql = "insert into san_pham (ma_san_pham, ten_san_pham, mo_ta, trang_thai, id_danh_muc)\n" +
+                "values (?,?,?,?,?)";
+        try (Connection con = DbConnection.getConnection();
+             PreparedStatement ps = con.prepareStatement(sql);) {
+            ps.setString(1, sanPham.getMaSanPham());
+            ps.setString(2, sanPham.getTenSanPham());
+            ps.setString(3, sanPham.getMoTa());
+            ps.setString(4, sanPham.getTrangThai());
+            ps.setInt(5, sanPham.getIdDanhMuc());
+            ps.executeUpdate();
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public SanPham getSanPhamById(Integer id) {
+        String sql = "select * from san_pham where id = ?";
+        SanPham sanPham = new SanPham();
+        try (Connection conn = DbConnection.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setInt(1, id);
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                sanPham.setId(rs.getInt("id"));
+                sanPham.setTenSanPham(rs.getString("ten_san_pham"));
+                sanPham.setMaSanPham(rs.getString("ma_san_pham"));
+                sanPham.setMoTa(rs.getString("mo_ta"));
+                sanPham.setTrangThai(rs.getString("trang_thai"));
+                sanPham.setIdDanhMuc(rs.getInt("id_danh_muc"));
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+
+        }
+        return sanPham;
     }
 }
